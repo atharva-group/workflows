@@ -20,7 +20,7 @@ jobs:
                 repository: atharva-group/lfs-data
                 path: lfs-data
                 lfs: false
-                
+
             - run: ls -l 
               working-directory: lfs-data
 
@@ -34,6 +34,18 @@ jobs:
               with:
                 path: lfs-data/.git/lfs
                 key: ${{ runner.os }}-lfs-${{ hashFiles('lfs-data/.lfs-assets-id') }}-v1
+            
+            - name: Enable LFS
+              if: steps.lfs-cache.outputs.cache-hit != 'true'
+              env:
+                GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+              run: |
+                  OWNER="atharva-group"
+                  REPO="lfs-data"
+                  API_URL="https://api.github.com/repos/$OWNER/$REPO/lfs"
+                  AUTH_HEADER="Authorization: Bearer $GITHUB_TOKEN"
+                  RESPONSE=$(curl -L -X PUT -H "Accept: application/vnd.github+json" -H "$AUTH_HEADER" -H "X-GitHub-Api-Version: 2022-11-28" $API_URL)
+                  echo $RESPONSE
         
             - name: Git LFS Pull
               run: git lfs pull
@@ -44,7 +56,7 @@ jobs:
               run: git lfs checkout
               working-directory: lfs-data
               if: steps.lfs-cache.outputs.cache-hit == 'true'
-              
+            
             - name: Save LFS cache if not found
               # uses fake ternary 
               # for reference: https://github.com/orgs/community/discussions/26738#discussioncomment-3253176
@@ -54,6 +66,18 @@ jobs:
               with:
                 path: lfs-data/.git/lfs
                 key: ${{ runner.os }}-lfs-${{ hashFiles('lfs-data/.lfs-assets-id') }}-v1
+            
+            - name: Disable LFS
+              if: steps.lfs-cache.outputs.cache-hit != 'true'
+              env:
+                 GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+              run: |
+                    OWNER="atharva-group"
+                    REPO="lfs-data"
+                    API_URL="https://api.github.com/repos/$OWNER/$REPO/lfs"
+                    AUTH_HEADER="Authorization: Bearer $GITHUB_TOKEN"
+                    RESPONSE=$(curl -L -X DELETE -H "Accept: application/vnd.github+json" -H "$AUTH_HEADER" -H "X-GitHub-Api-Version: 2022-11-28" $API_URL)
+                    echo $RESPONSE
             
             - run: ls -l 
               working-directory: lfs-data
