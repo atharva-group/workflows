@@ -51,6 +51,9 @@ jobs:
               with:
                 path: lfs-data/.git/lfs
                 key: ${{ runner.os }}-lfs-${{ hashFiles('lfs-data/.lfs-assets-id') }}-v1
+            
+            - run: ls -l 
+              working-directory: lfs-data
 
             - name: Get cache sizes
               env:
