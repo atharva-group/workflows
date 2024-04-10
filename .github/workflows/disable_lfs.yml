@@ -20,6 +20,9 @@ jobs:
                 repository: atharva-group/lfs-data
                 path: lfs-data
                 lfs: false
+                
+            - run: ls -l 
+              working-directory: lfs-data
 
             - name: Create LFS file list
               run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
