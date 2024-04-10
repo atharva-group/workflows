@@ -62,6 +62,7 @@ jobs:
                 AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
                 RESPONSE=$(curl -s -H "$AUTH_HEADER" $API_URL)
                 echo "Cache sizes:"
+                echo $RESPONSE
                 echo $RESPONSE | jq '.actions_caches[] | {id, size_in_bytes}'
 
 
