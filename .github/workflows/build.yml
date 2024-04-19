@@ -14,5 +14,5 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: ./.github/actions/action@v1
+            - uses: ./.github/actions/setup_lfs
             
