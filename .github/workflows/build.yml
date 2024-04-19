@@ -11,6 +11,9 @@ on:
 
 jobs:
     build:
+        defaults:
+          run:
+            shell: bash -el {0}
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -18,5 +21,6 @@ jobs:
             - uses: ./.github/actions/build_package
             - run: ls -l 
             - run: sudo apt-get install tree && tree
+            - run: micromamba activate yolo
             - run: python -c 'import secrets; print(secrets.token_hex())'   
             - run: python -c 'import numpy'  
