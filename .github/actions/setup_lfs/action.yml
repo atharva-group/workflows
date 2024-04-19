@@ -36,7 +36,6 @@ runs:
         - name: Restore LFS cache
           uses: actions/cache/restore@v3
           id: lfs-cache
-          shell: bash
           with:
             path: lfs-data/.git/lfs
             key: ${{ runner.os }}-lfs-${{ hashFiles('lfs-data/.lfs-assets-id') }}-v1
@@ -57,23 +56,22 @@ runs:
           if: ${{ steps.lfs-cache.outputs.cache-hit != 'true'  && always() || false }}
           uses: actions/cache/save@v3
           id: lfs-cache-save
-          shell: bash
           with:
             path: lfs-data/.git/lfs
             key: ${{ runner.os }}-lfs-${{ hashFiles('lfs-data/.lfs-assets-id') }}-v1
         
-        - name: Get cache sizes
-          shell: bash
-          env:
-            GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          run: |
-            OWNER="atharva-group"
-            REPO="workflows"
-            API_URL="https://api.github.com/repos/$OWNER/$REPO/actions/caches"
-            AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
-            RESPONSE=$(curl -s -H "$AUTH_HEADER" $API_URL)
-            echo "Cache sizes:"
-            echo $RESPONSE
-            echo $RESPONSE | jq '.actions_caches[] | {id, size_in_bytes}'
+        # - name: Get cache sizes
+        #   shell: bash
+        #   env:
+        #     GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        #   run: |
+        #     OWNER="atharva-group"
+        #     REPO="workflows"
+        #     API_URL="https://api.github.com/repos/$OWNER/$REPO/actions/caches"
+        #     AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
+        #     RESPONSE=$(curl -s -H "$AUTH_HEADER" $API_URL)
+        #     echo "Cache sizes:"
+        #     echo $RESPONSE
+        #     echo $RESPONSE | jq '.actions_caches[] | {id, size_in_bytes}'
 
 
