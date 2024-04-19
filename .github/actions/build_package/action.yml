@@ -1,0 +1,10 @@
+name: build_package
+description: 'Setup LFS'
+runs:
+    using: "composite"
+    steps:
+    - uses: actions/checkout@v4
+    - uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-file: conda-lock.yml
+        environment-name: yolo
