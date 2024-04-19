@@ -1,0 +1,70 @@
+name: disable-lfs
+
+on:
+  push:
+    branches:
+    - '*'
+
+  pull_request:
+    branches:
+    - '*'
+
+jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+          - uses: actions/checkout@v4
+
+          - uses: actions/checkout@v4
+            name: get lfs repo without lfs
+            with:
+              repository: atharva-group/lfs-data
+              path: lfs-data
+              lfs: false
+
+          - run: ls -l 
+            working-directory: lfs-data
+
+          - name: Create LFS file list
+            run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+            working-directory: lfs-data
+      
+          - name: Restore LFS cache
+            uses: actions/cache/restore@v3
+            id: lfs-cache
+            with:
+              path: lfs-data/.git/lfs
+              key: ${{ runner.os }}-lfs-${{ hashFiles('lfs-data/.lfs-assets-id') }}-v1
+      
+          - name: Git LFS Pull
+            run: git lfs pull
+            working-directory: lfs-data
+            if: steps.lfs-cache.outputs.cache-hit != 'true'
+            
+          - name: Git LFS Checkout
+            run: git lfs checkout
+            working-directory: lfs-data
+            if: steps.lfs-cache.outputs.cache-hit == 'true'
+          
+          - name: Save LFS cache if not found
+            if: ${{ steps.lfs-cache.outputs.cache-hit != 'true'  && always() || false }}
+            uses: actions/cache/save@v3
+            id: lfs-cache-save
+            with:
+              path: lfs-data/.git/lfs
+              key: ${{ runner.os }}-lfs-${{ hashFiles('lfs-data/.lfs-assets-id') }}-v1
+          
+          - name: Get cache sizes
+            env:
+              GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+            run: |
+              OWNER="atharva-group"
+              REPO="workflows"
+              API_URL="https://api.github.com/repos/$OWNER/$REPO/actions/caches"
+              AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
+              RESPONSE=$(curl -s -H "$AUTH_HEADER" $API_URL)
+              echo "Cache sizes:"
+              echo $RESPONSE
+              echo $RESPONSE | jq '.actions_caches[] | {id, size_in_bytes}'
+
+
