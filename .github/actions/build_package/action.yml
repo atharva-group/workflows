@@ -1,10 +1,10 @@
 name: build_package
 description: 'Setup LFS'
-# inputs:
-#   who-to-greet:  # id of input
-#     description: 'Who to greet'
-#     required: true
-#     default: 'World'
+inputs:
+  pip:  # id of input
+    description: 'pip'
+    required: true
+    default: 'awesome'
 # outputs:
 #   random-number:
 #     description: "Random number"
@@ -17,3 +17,5 @@ runs:
       with:
         environment-file: conda-lock.yml
         environment-name: yolo
+    - run: echo ${{ inputs.pip }}
+      shell: bash
