@@ -15,6 +15,12 @@ description: 'Setup LFS'
 runs:
     using: "composite"
     steps:
+    - name: Set GitHub Path
+      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+    
     - uses: actions/checkout@v4
 
     - uses: actions/checkout@v4
@@ -59,7 +65,7 @@ runs:
       with:
         path: lfs-data/.git/lfs
         key: ${{ runner.os }}-lfs-${{ hashFiles('lfs-data/.lfs-assets-id') }}-v1
-    
+
     # - name: Get cache sizes
     #   shell: bash
     #   env:
