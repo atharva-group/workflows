@@ -20,10 +20,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+            - uses: ./.github/actions/build_package
+              with:
+                pip: ${{ matrix.pip }}
             - uses: ./.github/actions/setup_lfs
-            # - uses: ./.github/actions/build_package
-              # with:
-              #   pip: ${{ matrix.pip }}
             - run: ls -l 
             - run: sudo apt-get install tree && tree ../../../ -L 2
             - run: tree ../../ -L 2 
