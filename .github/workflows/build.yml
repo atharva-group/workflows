@@ -27,8 +27,8 @@ jobs:
             - run: ls -l 
             - run: sudo apt-get install tree && tree ../../../ -L 2
             - run: tree ../../ -L 2 
-            - run: tree ../_actions -L 2 
-            - run: tree ../_temp -L 2 
+            # - run: tree ../_actions -L 2 
+            # - run: tree ../_temp -L 2 
             - run: find ../../../ -name largefile.psd 
             - run: micromamba activate yolo
             - run: python -c 'import secrets; print(secrets.token_hex())'   
