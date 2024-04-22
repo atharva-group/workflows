@@ -26,6 +26,9 @@ jobs:
                 pip: ${{ matrix.pip }}
             - run: ls -l 
             - run: sudo apt-get install tree && tree ../../../ -L 2
+            - run: sudo apt-get install tree && tree ../../ -L 2 
+            - run: sudo apt-get install tree && tree ../ -L 2 
+            
             - run: micromamba activate yolo
             - run: python -c 'import secrets; print(secrets.token_hex())'   
             - run: python -c 'import numpy'  
