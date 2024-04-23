@@ -17,5 +17,6 @@ runs:
       with:
         environment-file: conda-lock.yml
         environment-name: yolo
+    - uses: ./.github/actions/reusable_composite
     - run: echo ${{ inputs.pip }}
       shell: bash
