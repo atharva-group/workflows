@@ -1,0 +1,17 @@
+name: reuse
+description: 'reuse'
+inputs:
+  pip:  # id of input
+    description: 'pip'
+    required: true
+    default: 'awesome'
+# outputs:
+#   random-number:
+#     description: "Random number"
+#     value: ${{ steps.random-number-generator.outputs.random-number }}
+runs:
+    using: "composite"
+    steps:
+    - uses: actions/checkout@v4
+    - run: echo ${{ inputs.pip }}
+      shell: bash
