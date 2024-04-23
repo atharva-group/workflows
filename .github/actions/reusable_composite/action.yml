@@ -12,6 +12,8 @@ inputs:
 runs:
     using: "composite"
     steps:
-    - uses: actions/checkout@v4
+    # - uses: actions/checkout@v4
     - run: echo ${{ inputs.pip }}
+      shell: bash
+    - run: ls -l
       shell: bash
